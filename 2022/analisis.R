@@ -131,8 +131,6 @@ calculate_correlation <- function(data, column1, column2) {
               p_value = p_value))
 }
 
-
-
 ######### EDAD, SEXO, ESTADO CIVIL, URBANO, REGION ########
 df <- read.csv("Enaho01-2022-200.csv", header = TRUE, sep = ",", dec = ".", check.names = FALSE, fileEncoding = "UTF-8", encoding = "UTF-8")
 
@@ -292,8 +290,15 @@ df$TAMANO_LUG_TRABAJO <- replace(df$TAMANO_LUG_TRABAJO, is.na(df$TAMANO_LUG_TRAB
 df$SECTOR_FORMAL <- ifelse(df$TAMANO_LUG_TRABAJO > 5, "Si", "No")
 column_summary(df, "SECTOR_FORMAL")
 
-summary_table(df, EDUCACION, CONTRATO)
 calculate_correlation(df, "CONTRATO", "SECTOR_FORMAL")
+
+summary_table(df, EDUCACION, CONTRATO)
+
+df[["SEXO"]] <- ifelse(df[["SEXO"]] == "Hombre", 0, 1)
+df[["CONTRATO"]] <- ifelse(df[["CONTRATO"]] == "No", 0, 1)
+t_test_result <- t.test(df$CONTRATO ~ df$SEXO)
+print(by(df$CONTRATO, df$SEXO, mean))
+
 
 ######### SINDICATO (DESCARTAR) ####
 df <- read.csv("Enaho01-2022-800A.csv", header = TRUE, sep = ",", dec = ".", check.names = FALSE, fileEncoding = "UTF-8", encoding = "UTF-8")
