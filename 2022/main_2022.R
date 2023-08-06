@@ -1,6 +1,6 @@
 ##### CONFIGURATIONS ####
 library(dplyr)
-setwd("/Users/nicolasleon/Documents/Uni/SoSe23/Data_Inei/Data_Inei-main/2022/input/")
+setwd("C:/Users/mehr als lernen/Downloads/Data_Inei-main/Data_Inei-main/2022/input/")
 getwd()
 
 ##### FUNCTIONS #####
@@ -127,8 +127,23 @@ calculate_correlation <- function(data, column1, column2) {
 
   # Return the results as a list
   return(list(correlation_coefficient = correlation_coefficient,
-              standard_deviation = standard_deviation,
-              p_value = p_value))
+              standard_deviation = standard_deviation))
+}
+
+two_tailed_t_test <- function(data, group_column, variable_0, numeric_column) {
+  #Used to check whether two populations are different from one another
+  df <- data
+  
+  # Convert the specified group_column to binary
+  df[[group_column]] <- ifelse(df[[group_column]] == variable_0, 0, 1)
+  
+  # Convert the specified numeric_column to binary
+  df[[numeric_column]] <- ifelse(df[[numeric_column]] == "No", 0, 1)
+  
+  # Perform the t-test
+  t_test_result <- t.test(df[[numeric_column]] ~ df[[group_column]])
+  
+  return(t_test_result)
 }
 
 ######### EDAD, SEXO, ESTADO CIVIL, URBANO, REGION ########
@@ -144,7 +159,7 @@ df <- df %>%
                                   P209 == 5 ~ "Viudo",
                                   P209 == 6 ~ "Separado",
                                   TRUE ~ NA_character_))
-df$URBANO <- ifelse(df$ESTRATO >= 6, "No", ifelse(df$ESTRATO < 6, "Si", NA))
+df$URBANO <- ifelse(df$ESTRATO >= 7, "No", ifelse(df$ESTRATO < 7, "Si", NA))
 df <- df %>% 
   mutate(REGION = case_when(DOMINIO == 1 ~ "Costa Norte",
                             DOMINIO == 2 ~ "Costa Centro",
@@ -262,13 +277,17 @@ output <- merge(output, df, by = "ID", all = FALSE)
 ######### SEGURO SOCIAL ########
 output$SEGURO_SALUD <- ifelse((output$ESSALUD == "Si" & (output$ESSALUD_CONTRIBUCION == "Centro de trabajo" | output$ESSALUD_CONTRIBUCION == "Mismo")) | 
                           (output$SEGURO_PRIVADO == "Si" & (output$SEGURO_PRIVADO_CONTRIBUCION == "Centro de trabajo" | output$SEGURO_PRIVADO_CONTRIBUCION == "Mismo")) |
-                          (output$ENTIDAD_PRESTADORA == "Si" & (output$ENTIDAD_PRESTADORA_CONTRIBUCION == "Centro de trabajo" | output$ESSALUD_CONTRIBUCION == "Mismo")) |
-                          (output$SEGURO_FFAA_PNP_CONTRIBUCION == "Si" & (output$SEGURO_FFAA_PNP_CONTRIBUCION == "Centro de trabajo" | output$ESSALUD_CONTRIBUCION == "Mismo")) |
+                          (output$ENTIDAD_PRESTADORA == "Si" & (output$ENTIDAD_PRESTADORA_CONTRIBUCION == "Centro de trabajo" | output$ENTIDAD_PRESTADORA_CONTRIBUCION == "Mismo")) |
+                          (output$SEGURO_FFAA_PNP_CONTRIBUCION == "Si" & (output$SEGURO_FFAA_PNP_CONTRIBUCION == "Centro de trabajo" | output$SEGURO_FFAA_PNP_CONTRIBUCION == "Mismo")) |
                           (output$SEGURO_UNIVERSITARIO == "Si" & output$SEGURO_UNIVERSITARIO_CONTRIBUCION == "Mismo") | 
                           (output$OTRO_SEGURO == "Si" & (output$OTRO_SEGURO_CONTRIBUCION == "Centro de trabajo" | output$OTRO_SEGURO_CONTRIBUCION == "Mismo")), 
                           "Si", 
                           "No")
 output$SEGURO_SOCIAL <- ifelse(output$SEGURO_PENSION == "Si" | output$SEGURO_SALUD == "Si", "Si", "No")
+
+######### SAVE CSV ########
+write.csv(output, "results_2022.csv", row.names = FALSE, fileEncoding = "UTF-8")
+output <- read.csv("results_2022.csv", header = TRUE, sep = ",", dec = ".", check.names = FALSE, fileEncoding = "UTF-8", encoding = "UTF-8")
 
 ######### CODE ########
 #backup <- output
@@ -290,15 +309,11 @@ df$TAMANO_LUG_TRABAJO <- replace(df$TAMANO_LUG_TRABAJO, is.na(df$TAMANO_LUG_TRAB
 df$SECTOR_FORMAL <- ifelse(df$TAMANO_LUG_TRABAJO > 5, "Si", "No")
 column_summary(df, "SECTOR_FORMAL")
 
-calculate_correlation(df, "CONTRATO", "SECTOR_FORMAL")
+calculate_correlation(df, "CONTRATO", "SEGURO_SOCIAL")
 
 summary_table(df, EDUCACION, CONTRATO)
 
-df[["SEXO"]] <- ifelse(df[["SEXO"]] == "Hombre", 0, 1)
-df[["CONTRATO"]] <- ifelse(df[["CONTRATO"]] == "No", 0, 1)
-t_test_result <- t.test(df$CONTRATO ~ df$SEXO)
-print(by(df$CONTRATO, df$SEXO, mean))
-
+two_tailed_t_test(df, "SEXO", "Hombre", "SECTOR_FORMAL")
 
 ######### SINDICATO (DESCARTAR) ####
 df <- read.csv("Enaho01-2022-800A.csv", header = TRUE, sep = ",", dec = ".", check.names = FALSE, fileEncoding = "UTF-8", encoding = "UTF-8")
