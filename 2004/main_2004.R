@@ -1,7 +1,7 @@
 ##### CONFIGURATIONS ####
 library(haven)
 library(dplyr)
-setwd("C:/Users/mehr als lernen/Downloads/Data_Inei-main/Data_Inei-main/2004/input/")
+setwd("/Users/nicolasleon/Documents/Uni/SoSe23/Data_final/Data_Inei/2004/input")
 getwd()
 
 ##### FUNCTIONS #####
