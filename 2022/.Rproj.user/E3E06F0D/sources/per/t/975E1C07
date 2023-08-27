@@ -1,0 +1,26 @@
+{
+    "id": "975E1C07",
+    "path": "~/Documents/Uni/SoSe23/Data_final/Data_Inei/2022/main_2022.R",
+    "project_path": "main_2022.R",
+    "type": "r_source",
+    "hash": "3333680139",
+    "contents": "",
+    "dirty": false,
+    "created": 1693158236250.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "311,27",
+        "scrollLine": "300"
+    },
+    "folds": "5|16|147|0|\n148|51|176|0|\n177|36|212|0|\n213|16|230|0|\n231|31|247|0|\n248|80|275|0|\n276|24|286|0|\n287|19|290|0|\n317|32|322|0|\n",
+    "lastKnownWriteTime": 1693158815,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1693158815164,
+    "read_only": false,
+    "read_only_alternatives": []
+}

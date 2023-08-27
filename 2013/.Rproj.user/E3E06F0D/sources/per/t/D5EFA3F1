@@ -1,0 +1,26 @@
+{
+    "id": "D5EFA3F1",
+    "path": "~/Documents/Uni/SoSe23/Data_final/Data_Inei/2013/main_2013.R",
+    "project_path": "main_2013.R",
+    "type": "r_source",
+    "hash": "2129157667",
+    "contents": "",
+    "dirty": false,
+    "created": 1693157445812.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "4,0",
+        "scrollLine": "0"
+    },
+    "folds": "6|16|150|0|\n7|53|21|0|\n151|51|180|0|\n181|36|210|0|\n211|16|228|0|\n229|31|246|0|\n247|80|274|0|\n275|24|284|103|\n285|19|288|0|\n",
+    "lastKnownWriteTime": 1693158176,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1693158176427,
+    "read_only": false,
+    "read_only_alternatives": []
+}
