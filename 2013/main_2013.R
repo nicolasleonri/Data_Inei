@@ -294,6 +294,16 @@ output <- output[complete.cases(output$EMPLEO), ]
 column_summary(output, "EMPLEO")
 
 df <- output[output$EMPLEO == "Si", ]
+
+df$EDAD_CLASIFICADO <- findInterval(df$EDAD, c(30, 45, 60, 65 ))
+df <- df %>% 
+  mutate(EDAD_CLASIFICADO = case_when(EDAD_CLASIFICADO == 0 ~ "14 a 29 años",
+                                      EDAD_CLASIFICADO == 1 ~ "30 a 44 años",
+                                      EDAD_CLASIFICADO == 2 ~ "45 a 59 años",
+                                      EDAD_CLASIFICADO == 3 ~ "60 a 74 años",
+                                      EDAD_CLASIFICADO == 4 ~ "75 años a más",
+                                      TRUE ~ NA_character_))
+
 df$CONTRATO <- replace(df$CONTRATO, is.na(df$CONTRATO), "No")
 column_summary(df, "CONTRATO")
 
@@ -304,11 +314,11 @@ df$REGISTRO_IMPUESTOS_LUG_TRABAJO <- replace(df$REGISTRO_IMPUESTOS_LUG_TRABAJO, 
 column_summary(df, "REGISTRO_IMPUESTOS_LUG_TRABAJO")
 
 df$TAMANO_LUG_TRABAJO <- replace(df$TAMANO_LUG_TRABAJO, is.na(df$TAMANO_LUG_TRABAJO), 0)
-df$SECTOR_FORMAL <- ifelse(df$TAMANO_LUG_TRABAJO > 5, "Si", "No")
+df$SECTOR_FORMAL <- ifelse(df$TAMANO_LUG_TRABAJO > 10, "Si", "No")
 column_summary(df, "SECTOR_FORMAL")
 
-calculate_correlation(df, "CONTRATO", "SEGURO_SOCIAL")
+calculate_correlation(df, "REGISTRO_IMPUESTOS_LUG_TRABAJO", "SECTOR_FORMAL")
 
-summary_table(df, EDUCACION, CONTRATO)
+a_ver <- summary_table(df, EDAD_CLASIFICADO, REGISTRO_IMPUESTOS_LUG_TRABAJO)
 
 two_tailed_t_test(df, "SEXO", "Hombre", "SECTOR_FORMAL")
